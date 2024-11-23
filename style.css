@@ -1,0 +1,115 @@
+/* Animaciones adicionales */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Mejoras en las tarjetas */
+.experience-card {
+    transition: all 0.3s ease;
+    backface-visibility: hidden;
+}
+
+.experience-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.experience-card img {
+    transition: transform 0.3s ease;
+}
+
+.experience-card:hover img {
+    transform: scale(1.05);
+}
+
+/* Mejoras en los botones */
+.rounded-full {
+    transition: all 0.3s ease;
+}
+
+.rounded-full:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+}
+
+/* Efectos de hover para enlaces */
+.hover\:text-coral {
+    transition: color 0.2s ease;
+}
+
+/* Mejoras en el menú móvil */
+.mobile-menu-slide {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efectos para el scroll suave */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Ajustar según la altura del header */
+}
+
+/* Mejoras en la accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Mejoras en el contraste */
+.text-gray-400 {
+    color: rgba(156, 163, 175, 0.9); /* Mejorado para accesibilidad */
+}
+
+/* Estilos para el modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .bg-white\/95 {
+        background-color: rgba(24, 24, 27, 0.95);
+    }
+    
+    .text-brown {
+        color: var(--color-coral);
+    }
+}
+
+/* Mejoras en la responsividad */
+@media (max-width: 640px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .experience-card {
+        margin-bottom: 2rem;
+    }
+}
+
+/* Utilidades adicionales */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Mejoras en el rendimiento */
+img {
+    content-visibility: auto;
+}

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camino al Sol - Teotihuacán</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-coral: #FF6B6B;
+            --color-brown: #4A3933;
+            --color-skyBlue: #87CEEB;
+            --color-gold: #FFD700;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .font-lobster {
+            font-family: 'Lobster', cursive;
+        }
+
+        .text-coral {
+            color: var(--color-coral);
+        }
+
+        .bg-coral {
+            background-color: var(--color-coral);
+        }
+
+        .text-brown {
+            color: var(--color-brown);
+        }
+
+        .bg-brown {
+            background-color: var(--color-brown);
+        }
+
+        .text-gold {
+            color: var(--color-gold);
+        }
+
+        .bg-skyBlue {
+            background-color: var(--color-skyBlue);
+        }
+
+        /* Animaciones */
+        .hover\:bg-coral\/80:hover {
+            background-color: rgba(255, 107, 107, 0.8);
+        }
+
+        .hover\:bg-skyBlue\/80:hover {
+            background-color: rgba(135, 206, 235, 0.8);
+        }
+
+        .transition-colors {
+            transition: background-color 0.3s ease;
+        }
+
+        /* Estilos para el menú móvil */
+        .mobile-menu-slide {
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mobile-menu-slide.show {
+            transform: translateY(0);
+        }
+
+        /* Estilos para las tarjetas de experiencia */
+        .experience-card {
+            transition: transform 0.3s ease;
+        }
+
+        .experience-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Ajustes de responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+        .header-scroll {
+        backdrop-filter: blur(8px);
+        background-color: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .header-transparent {
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    /* Ajuste para el contenido del header */
+    .header-content {
+        transition: all 0.3s ease;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .header-scroll .header-content {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    /* Transición suave para el logo */
+    .logo-container img {
+        transition: all 0.3s ease;
+    }
+
+    .header-scroll .logo-container img {
+        transform: scale(0.9);
+    }
+     /* Estilos para el header */
+     .header-scroll {
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    /* Header siempre blanco */
+    .header-default {
+        background-color: white;
+    }
+
+    /* Ajuste para el contenido del header */
+    .header-content {
+        transition: all 0.3s ease;
+        padding-top: 1.25rem;  /* Incrementado el padding */
+        padding-bottom: 1.25rem;
+    }
+
+    .header-scroll .header-content {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    /* Logo extra grande */
+    .logo-container img {
+        width: 7rem;  /* 112px - significativamente más grande */
+        height: 7rem; /* 112px */
+        transition: all 0.3s ease;
+    }
+
+    /* El texto se mantiene en el mismo tamaño */
+    .logo-text {
+        font-size: 2.5rem; /* Se mantiene en 40px */
+        margin-left: 1.5rem;
+    }
+
+    /* Ajuste del espacio entre el logo y el texto */
+    .logo-container {
+        gap: 1rem;
+    }
+
+     /* Ajuste del espacio en el header para acomodar el logo más grande */
+     .header-content {
+        transition: all 0.3s ease;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .header-scroll .header-content {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+   /* Ajustes responsive para el logo grande */
+   @media (max-width: 768px) {
+        .logo-container img {
+            width: 5rem;  /* 80px en móvil */
+            height: 5rem;
+        }
+        
+        .logo-text {
+            font-size: 2rem;
+        }
+    }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    
+<header class="fixed w-full z-50 header-default" id="mainHeader">
+    <nav class="container mx-auto px-4">
+        <div class="header-content flex justify-between items-center">
+            <!-- Logo con tamaño aumentado -->
+            <div class="logo-container flex items-center">
+                <img src="assets/logo.svg" alt="Camino al Sol Logo" class="w-30 h-30"> <!-- 112x112px -->
+                <span class="font-lobster text-brown logo-text">Camino al Sol</span>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#inicio" class="text-brown hover:text-coral transition-colors text-xl">INICIO</a>
+                <a href="#tours" class="text-brown hover:text-coral transition-colors text-xl">TOURS</a>
+                <select id="langSelect" class="bg-skyBlue/20 rounded-md px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-coral">
+                    <option value="es">ES</option>
+                    <option value="en">EN</option>
+                    <option value="fr">FR</option>
+                </select>
+                <div class="flex items-center space-x-6">
+                    <a href="#" class="text-brown hover:text-coral transition-colors text-2xl">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-brown hover:text-coral transition-colors text-2xl">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="text-brown hover:text-coral transition-colors text-2xl">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Button también más grande -->
+            <button class="md:hidden text-brown text-3xl" id="menuButton">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+            <!-- Mobile Menu -->
+        <div class="md:hidden hidden mobile-menu-slide bg-white" id="mobileMenu">
+            <div class="py-8 space-y-6"> <!-- Aumentado el padding -->
+                <a href="#inicio" class="block text-brown hover:text-coral text-xl px-4">INICIO</a>
+                <a href="#tours" class="block text-brown hover:text-coral text-xl px-4">TOURS</a>
+                <select class="block w-full bg-skyBlue/20 rounded-md px-4 py-2 text-xl mx-4">
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30">
+            <img src="assets/hero.jpg" alt="Globos aerostáticos en Teotihuacán" class="w-full h-full object-cover">        </div>
+        <div class="relative h-full flex items-center justify-center text-center text-white px-4">
+            <div class="max-w-3xl">
+                <h1 class="font-lobster text-4xl md:text-6xl mb-6 hero-title">Descubre Teotihuacán desde las Alturas</h1>
+                <a href="#book" class="inline-block bg-coral hover:bg-coral/80 text-white font-bold px-8 py-4 rounded-full transition-colors">
+                    ¡RESERVA YA!
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Cards -->
+    <section class="py-20 px-4">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden experience-card">
+                    <div class="h-64 relative">
+                        <img src="assets/cuatrimoto.jpg" alt="Aventura en cuatrimoto" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-brown">Aventura en cuatrimoto por Teotihuacán</h3>
+                        <p class="text-gray-600 mb-4">Vive la emoción y la historia</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-lobster text-2xl text-coral">$2,600.00</span>
+                            <button class="bg-skyBlue text-white px-6 py-2 rounded-full hover:bg-skyBlue/80 transition-colors">
+                                ¡RESERVA YA!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden experience-card">
+                    <div class="h-64 relative">
+                        <img src="assets/piramides.jpg" alt="Tour privado" class="w-full h-full object-cover">
+
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-brown">Tour privado en Teotihuacán</h3>
+                        <p class="text-gray-600 mb-4">Un viaje exclusivo por la Ciudad de los Dioses</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-lobster text-2xl text-coral">$2,200.00</span>
+                            <button class="bg-skyBlue text-white px-6 py-2 rounded-full hover:bg-skyBlue/80 transition-colors">
+                                ¡RESERVA YA!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden experience-card">
+                    <div class="h-64 relative">
+                        <img src="assets/globos.jpg" alt="Vuelo en globo" class="w-full h-full object-cover">                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-brown">Vuelo y desayuno en restaurante</h3>
+                        <p class="text-gray-600 mb-4">El Gran Teocalli</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-lobster text-2xl text-coral">$2,700.00</span>
+                            <button class="bg-skyBlue text-white px-6 py-2 rounded-full hover:bg-skyBlue/80 transition-colors">
+                                ¡RESERVA YA!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brown text-white py-16">
+        <div class="container mx-auto px-4">
+            <!-- Grid principal del footer -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Columna 1: Logo e información -->
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-2">
+                        <img src="assets/logo.svg" alt="Camino al Sol" class="w-12 h-12 bg-white rounded-full p-2">
+
+                        <span class="font-lobster text-2xl text-gold">Camino al Sol</span>
+                    </div>
+                    <p class="text-sm text-gray-300">
+                        Descubre la magia de Teotihuacán desde una perspectiva única
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white hover:text-coral">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-coral">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-coral">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Columna 2: Tours -->
+                <div>
+                    <h3 class="font-lobster text-xl mb-4 text-gold">Tours</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-coral">Vuelo en Globo</a></li>
+                        <li><a href="#" class="hover:text-coral">Tour en Cuatrimoto</a></li>
+                        <li><a href="#" class="hover:text-coral">Visita Guiada</a></li>
+                        <li><a href="#" class="hover:text-coral">Experiencia Completa</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna 3: Enlaces Útiles -->
+                <div>
+                    <h3 class="font-lobster text-xl mb-4 text-gold">Enlaces Útiles</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-coral">Sobre Nosotros</a></li>
+                        <li><a href="#" class="hover:text-coral">Términos y Condiciones</a></li>
+                        <li><a href="#" class="hover:text-coral">Política de Privacidad</a></li>
+                        <li><a href="#" class="hover:text-coral">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna 4: Contacto -->
+                <div>
+                    <h3 class="font-lobster text-xl mb-4 text-gold">Contacto</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-phone text-coral"></i>
+                            <span>+52 (123) 456-7890</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-envelope text-coral"></i>
+                            <span>info@caminoalsol.com</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-map-marker-alt text-coral"></i>
+                            <span>Teotihuacán, Estado de México</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t border-gray-700 pt-8 mt-8 text-center text-sm text-gray-400">
+                <p>© 2024 Camino al Sol. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script>
+        // Mobile menu functionality
+        const menuButton = document.getElementById('menuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        let isMenuOpen = false;
+
+        menuButton.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('show');
+            // Change menu icon
+            menuButton.innerHTML = isMenuOpen ? 
+                '<i class="fas fa-times"></i>' : 
+                '<i class="fas fa-bars"></i>';
+        });
+
+        // Language switcher
+        const langSelect = document.getElementById('langSelect');
+        const translations = {
+            es: {
+                inicio: 'INICIO',
+                tours: 'TOURS',
+                reserva: '¡RESERVA YA!',
+                descubre: 'Descubre Teotihuacán desde las Alturas',
+            },
+            en: {
+                inicio: 'HOME',
+                tours: 'TOURS',
+                reserva: 'BOOK NOW!',
+                descubre: ''Discover Teotihuacán from Above',
+                sobreNosotros: 'About Us',
+                contacto: 'Contact',
+                terminosCondiciones: 'Terms and Conditions',
+                politicaPrivacidad: 'Privacy Policy',
+                faq: 'FAQ'
+            },
+            fr: {
+                inicio: 'ACCUEIL',
+                tours: 'CIRCUITS',
+                reserva: 'RÉSERVER!',
+                descubre: 'Découvrez Teotihuacán d\'en Haut',
+                sobreNosotros: 'À Propos',
+                contacto: 'Contact',
+                terminosCondiciones: 'Termes et Conditions',
+                politicaPrivacidad: 'Politique de Confidentialité',
+                faq: 'FAQ'
+            }
+        };
+
+        function updateLanguage(lang) {
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // Language selector event listener
+        langSelect.addEventListener('change', (e) => {
+            const lang = e.target.value;
+            updateLanguage(lang);
+        });
+
+        // Initialize with Spanish
+        updateLanguage('es');
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Form validation for booking buttons
+        document.querySelectorAll('button:contains("¡RESERVA YA!")').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Aquí puedes agregar la lógica para el proceso de reserva
+                alert('¡Gracias por tu interés! Pronto te contactaremos para confirmar tu reserva.');
+            });
+        });
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections for animation
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Agregar preload para imágenes
+        window.addEventListener('load', () => {
+            const images = document.querySelectorAll('img[data-src]');
+            images.forEach(img => {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+            });
+        });
+
+        // Manejar errores de carga de imágenes
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('error', function() {
+                this.src = '/api/placeholder/400/320'; // Imagen de respaldo
+            });
+        });
+    </script>
+    <script> // Función para manejar el scroll del header
+        function handleHeaderScroll() {
+            const header = document.getElementById('mainHeader');
+            const scrollPosition = window.scrollY;
+    
+            if (scrollPosition > 50) {
+                header.classList.remove('header-transparent');
+                header.classList.add('header-scroll');
+            } else {
+                header.classList.add('header-transparent');
+                header.classList.remove('header-scroll');
+            }
+        }
+    
+        // Event listener para el scroll
+        window.addEventListener('scroll', handleHeaderScroll);
+        // Ejecutar una vez al cargar para establecer el estado inicial
+        handleHeaderScroll();
+    
+        // Opcional: Agregar una clase cuando el header está sobre el hero
+        const heroSection = document.querySelector('.hero-section');
+        if (heroSection) {
+            const headerObserver = new IntersectionObserver(
+                ([entry]) => {
+                    const header = document.getElementById('mainHeader');
+                    if (!entry.isIntersecting) {
+                        header.classList.add('header-scroll');
+                    }
+                },
+                { threshold: 0.1 }
+            );
+    
+            headerObserver.observe(heroSection);
+        }
+        function handleHeaderScroll() {
+        const header = document.getElementById('mainHeader');
+        const scrollPosition = window.scrollY;
+
+        if (scrollPosition > 50) {
+            header.classList.add('header-scroll');
+        } else {
+            header.classList.remove('header-scroll');
+        }
+    }
+
+    // Event listener para el scroll
+    window.addEventListener('scroll', handleHeaderScroll);
+    // Ejecutar una vez al cargar
+    handleHeaderScroll();
+    </script>
+</body>
+</html>
