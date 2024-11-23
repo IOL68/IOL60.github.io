@@ -1,4 +1,19 @@
-// Continuación de las traducciones
+// Mobile menu functionality
+const menuButton = document.getElementById('menuButton');
+const mobileMenu = document.getElementById('mobileMenu');
+let isMenuOpen = false;
+
+menuButton.addEventListener('click', () => {
+    isMenuOpen = !isMenuOpen;
+    mobileMenu.classList.toggle('hidden');
+    mobileMenu.classList.toggle('show');
+    menuButton.innerHTML = isMenuOpen ? 
+        '<i class="fas fa-times"></i>' : 
+        '<i class="fas fa-bars"></i>';
+});
+
+// Language switcher
+const langSelect = document.getElementById('langSelect');
 const translations = {
     es: {
         inicio: 'INICIO',
@@ -35,6 +50,85 @@ const translations = {
     }
 };
 
+// Función para verificar si una imagen existe
+function imageExists(url) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+    });
+}
+
+// Función para manejar las imágenes
+async function handleImages() {
+    const images = document.querySelectorAll('img');
+    
+    for (let img of images) {
+        const originalSrc = img.getAttribute('src');
+        console.log('Intentando cargar imagen:', originalSrc);
+
+        const exists = await imageExists(originalSrc);
+        
+        if (!exists) {
+            console.log('Imagen no encontrada:', originalSrc);
+            const alternativePaths = [
+                originalSrc,
+                `.${originalSrc}`,
+                `/${originalSrc}`,
+                originalSrc.replace('assets/', '/assets/')
+            ];
+
+            for (let path of alternativePaths) {
+                if (await imageExists(path)) {
+                    console.log('Imagen encontrada en ruta alternativa:', path);
+                    img.src = path;
+                    break;
+                }
+            }
+        }
+
+        img.onerror = function() {
+            console.error('Error al cargar la imagen:', this.src);
+            if (!this.src.includes('placeholder')) {
+                this.src = '/api/placeholder/400/320';
+            }
+        };
+
+        img.onload = function() {
+            console.log('Imagen cargada exitosamente:', this.src);
+            this.style.opacity = '1';
+        };
+    }
+}
+
+// Inicialización de las cards de experiencia
+function initExperienceCards() {
+    const cards = document.querySelectorAll('.experience-card');
+    
+    cards.forEach(card => {
+        const img = card.querySelector('img');
+        const loadingPlaceholder = document.createElement('div');
+        loadingPlaceholder.className = 'absolute inset-0 bg-gray-200 animate-pulse';
+        
+        img.style.opacity = '0';
+        img.parentNode.insertBefore(loadingPlaceholder, img);
+        
+        img.onload = () => {
+            loadingPlaceholder.remove();
+            img.style.opacity = '1';
+            img.style.transition = 'opacity 0.3s ease-in';
+        };
+        
+        img.onerror = () => {
+            loadingPlaceholder.remove();
+            img.src = '/api/placeholder/400/320';
+            img.style.opacity = '1';
+        };
+    });
+}
+
+// Función para actualizar el idioma
 function updateLanguage(lang) {
     const elements = document.querySelectorAll('[data-translate]');
     elements.forEach(element => {
@@ -45,69 +139,86 @@ function updateLanguage(lang) {
     });
 }
 
-// Language selector event listener
-langSelect.addEventListener('change', (e) => {
-    const lang = e.target.value;
-    updateLanguage(lang);
+// Observador de intersección para lazy loading
+const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const img = entry.target;
+            if (img.dataset.src) {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+                observer.unobserve(img);
+            }
+        }
+    });
+}, {
+    rootMargin: '50px 0px',
+    threshold: 0.1
 });
 
-// Initialize with Spanish
-updateLanguage('es');
+// Función para manejar el scroll del header
+function handleHeaderScroll() {
+    const header = document.getElementById('mainHeader');
+    const scrollPosition = window.scrollY;
 
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
+    if (scrollPosition > 50) {
+        header.classList.add('header-scroll');
+    } else {
+        header.classList.remove('header-scroll');
+    }
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar manejo de imágenes
+    handleImages().catch(console.error);
+    initExperienceCards();
+
+    // Aplicar lazy loading a imágenes con data-src
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+    });
+
+    // Inicializar con español
+    updateLanguage('es');
+
+    // Smooth scroll para enlaces de anclaje
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Validación de formularios de reserva
+    document.querySelectorAll('button').forEach(button => {
+        if (button.textContent.includes('¡RESERVA YA!')) {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('¡Gracias por tu interés! Pronto te contactaremos para confirmar tu reserva.');
             });
         }
     });
 });
 
-// Floating book button visibility
-const floatingButton = document.querySelector('.fixed.bottom-6.right-6');
-if (floatingButton) {
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 500) {
-            floatingButton.classList.remove('opacity-0');
-            floatingButton.classList.add('opacity-100');
-        } else {
-            floatingButton.classList.add('opacity-0');
-            floatingButton.classList.remove('opacity-100');
-        }
-    });
-}
-
-// Experience cards hover effect
-const cards = document.querySelectorAll('.experience-card');
-cards.forEach(card => {
-    card.addEventListener('mouseenter', () => {
-        card.style.transform = 'translateY(-5px)';
-    });
-    
-    card.addEventListener('mouseleave', () => {
-        card.style.transform = 'translateY(0)';
-    });
+// Event listener para el selector de idioma
+langSelect.addEventListener('change', (e) => {
+    updateLanguage(e.target.value);
 });
 
-// Initialize current year in footer
-document.querySelector('.text-gray-400 p').textContent = 
-    `© ${new Date().getFullYear()} Camino al Sol. Todos los derechos reservados.`;
+// Event listener para el scroll
+window.addEventListener('scroll', handleHeaderScroll);
 
-// Form validation for booking buttons
-document.querySelectorAll('button:contains("¡RESERVA YA!")').forEach(button => {
-    button.addEventListener('click', (e) => {
-        e.preventDefault();
-        // Aquí puedes agregar la lógica para el proceso de reserva
-        alert('¡Gracias por tu interés! Pronto te contactaremos para confirmar tu reserva.');
-    });
-});
+// Ejecutar handleHeaderScroll una vez al cargar
+handleHeaderScroll();
 
-// Add intersection observer for animations
+// Observer para las animaciones de sección
 const observerOptions = {
     root: null,
     rootMargin: '0px',
@@ -123,33 +234,7 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe all sections for animation
+// Observar todas las secciones para animación
 document.querySelectorAll('section').forEach(section => {
     observer.observe(section);
-});
-
-// Add preload for images
-window.addEventListener('load', () => {
-    const images = document.querySelectorAll('img[data-src]');
-    images.forEach(img => {
-        img.src = img.dataset.src;
-        img.removeAttribute('data-src');
-    });
-});
-
-// Handle form submissions
-document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        // Aquí puedes agregar la validación del formulario
-        const formData = new FormData(form);
-        console.log('Form submitted:', Object.fromEntries(formData));
-    });
-});
-
-// Manejar errores de carga de imágenes
-document.querySelectorAll('img').forEach(img => {
-    img.addEventListener('error', function() {
-        this.src = 'assets/placeholder.jpg'; // Imagen de respaldo
-    });
 });
