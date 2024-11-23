@@ -153,3 +153,13 @@ document.querySelectorAll('img').forEach(img => {
         this.src = 'assets/placeholder.jpg'; // Imagen de respaldo
     });
 });
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        img.onerror = function() {
+            // Reemplaza con una imagen de placeholder si la carga falla
+            this.src = 'https://via.placeholder.com/400x320';
+            this.alt = 'Imagen temporal';
+        };
+    });
+});
