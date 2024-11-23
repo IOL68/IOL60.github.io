@@ -275,7 +275,7 @@
                
            <!-- Card 2 -->
 <div class="h-64 relative">
-    <img src="assets/piramides.JPG" alt="Tour privado" class="w-full h-full object-cover">
+    <img src="/assets/piramides.JPG" alt="Tour privado" class="w-full h-full object-cover">
 </div>
                     <div class="p-6">
                     <h3 class="text-xl font-bold mb-2 text-brown">Tour privado en Teotihuacán</h3>
@@ -565,4 +565,17 @@
     handleHeaderScroll();
     </script>
 </body>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        console.log('Checking image path:', img.src);
+        img.onerror = function() {
+            console.error('Failed to load image:', img.src);
+            // Temporalmente muestra un placeholder si la imagen falla
+            this.src = 'https://via.placeholder.com/400x320?text=Imagen+No+Disponible';
+        };
+    });
+});
+</script>
 </html>
