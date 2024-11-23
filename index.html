@@ -181,36 +181,6 @@
             font-size: 2rem;
         }
     }
-        /* Estilos específicos para el menú móvil */
-    .mobile-menu-slide {
-        position: fixed;
-        top: 80px; /* Ajusta esto según la altura de tu header */
-        left: 0;
-        right: 0;
-        background: white;
-        transition: all 0.3s ease;
-        transform: translateY(-100%);
-        opacity: 0;
-        visibility: hidden;
-        z-index: 40;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    .mobile-menu-slide.show {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .mobile-menu-slide a {
-        display: block;
-        padding: 1rem;
-        border-bottom: 1px solid rgba(0,0,0,0.1);
-    }
-
-    .mobile-menu-slide select {
-        margin: 1rem;
-    }
     </style>
 </head>
 <body>
@@ -248,23 +218,25 @@
             </div>
 
             <!-- Mobile Menu Button también más grande -->
-          <button class="md:hidden text-brown hover:text-coral text-3xl focus:outline-none" id="menuButton">
-    <i class="fas fa-bars"></i>
-</button>
+            <button class="md:hidden text-brown text-3xl" id="menuButton">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
 
             <!-- Mobile Menu -->
-  <div class="mobile-menu-slide" id="mobileMenu" style="display: none;">
-    <div class="py-4">
-        <a href="#inicio" class="block text-brown hover:text-coral text-xl px-4">INICIO</a>
-        <a href="#tours" class="block text-brown hover:text-coral text-xl px-4">TOURS</a>
-        <select id="mobileLangSelect" class="block w-full bg-skyBlue/20 rounded-md px-4 py-2 text-xl mx-4">
-            <option value="es">Español</option>
-            <option value="en">English</option>
-            <option value="fr">Français</option>
-        </select>
-    </div>
-</div>>
+        <div class="md:hidden hidden mobile-menu-slide bg-white" id="mobileMenu">
+            <div class="py-8 space-y-6"> <!-- Aumentado el padding -->
+                <a href="#inicio" class="block text-brown hover:text-coral text-xl px-4">INICIO</a>
+                <a href="#tours" class="block text-brown hover:text-coral text-xl px-4">TOURS</a>
+                <select class="block w-full bg-skyBlue/20 rounded-md px-4 py-2 text-xl mx-4">
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+    </header>
 
     <!-- Hero Section -->
     <section class="relative h-screen">
@@ -287,7 +259,7 @@
                 <!-- Card 1 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden experience-card">
                     <div class="h-64 relative">
-                        <img src="assets/cuatrimoto.JPG" alt="Aventura en cuatrimoto" class="w-full h-full object-cover">
+                        <img src="assets/cuatrimoto.jpg" alt="Aventura en cuatrimoto" class="w-full h-full object-cover">
                     </div>
                     <div class="p-6">
                         <h3 class="text-xl font-bold mb-2 text-brown">Aventura en cuatrimoto por Teotihuacán</h3>
@@ -304,7 +276,7 @@
                 <!-- Card 2 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden experience-card">
                     <div class="h-64 relative">
-                        <img src="assets/piramides.JPG" alt="Tour privado" class="w-full h-full object-cover">
+                        <img src="assets/piramides.jpg" alt="Tour privado" class="w-full h-full object-cover">
 
                     </div>
                     <div class="p-6">
@@ -322,7 +294,7 @@
                 <!-- Card 3 -->
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden experience-card">
                     <div class="h-64 relative">
-                        <img src="assets/globos.JPG" alt="Vuelo en globo" class="w-full h-full object-cover">                    </div>
+                        <img src="assets/globos.jpg" alt="Vuelo en globo" class="w-full h-full object-cover">                    </div>
                     <div class="p-6">
                         <h3 class="text-xl font-bold mb-2 text-brown">Vuelo y desayuno en restaurante</h3>
                         <p class="text-gray-600 mb-4">El Gran Teocalli</p>
