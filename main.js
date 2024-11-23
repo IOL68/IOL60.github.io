@@ -1,3 +1,7 @@
+// Configuración inicial
+const REPO_PATH = '/60';
+const DOMAIN_PATH = '/caminoalsol.github.io';
+
 // Mobile menu functionality
 const menuButton = document.getElementById('menuButton');
 const mobileMenu = document.getElementById('mobileMenu');
@@ -12,8 +16,7 @@ menuButton.addEventListener('click', () => {
         '<i class="fas fa-bars"></i>';
 });
 
-// Language switcher
-const langSelect = document.getElementById('langSelect');
+// Traducciones
 const translations = {
     es: {
         inicio: 'INICIO',
@@ -50,81 +53,91 @@ const translations = {
     }
 };
 
-// Función para verificar si una imagen existe
-function imageExists(url) {
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve(true);
-        img.onerror = () => resolve(false);
-        img.src = url;
-    });
-}
-
-// Función para manejar las imágenes
-async function handleImages() {
-    const images = document.querySelectorAll('img');
+// Función para manejar imágenes generales
+function initializeImages() {
+    const images = document.querySelectorAll('img:not(.experience-card img)');
     
-    for (let img of images) {
+    images.forEach(img => {
         const originalSrc = img.getAttribute('src');
-        console.log('Intentando cargar imagen:', originalSrc);
-
-        const exists = await imageExists(originalSrc);
-        
-        if (!exists) {
-            console.log('Imagen no encontrada:', originalSrc);
-            const alternativePaths = [
-                originalSrc,
-                `.${originalSrc}`,
-                `/${originalSrc}`,
-                originalSrc.replace('assets/', '/assets/')
-            ];
-
-            for (let path of alternativePaths) {
-                if (await imageExists(path)) {
-                    console.log('Imagen encontrada en ruta alternativa:', path);
-                    img.src = path;
-                    break;
-                }
-            }
+        if (!originalSrc.includes('/60/') && !originalSrc.includes('placeholder')) {
+            img.src = `${REPO_PATH}/${originalSrc.replace(/^\//, '')}`;
         }
-
+        
         img.onerror = function() {
-            console.error('Error al cargar la imagen:', this.src);
+            console.error('Error al cargar imagen:', this.src);
             if (!this.src.includes('placeholder')) {
                 this.src = '/api/placeholder/400/320';
             }
         };
-
-        img.onload = function() {
-            console.log('Imagen cargada exitosamente:', this.src);
-            this.style.opacity = '1';
-        };
-    }
+    });
 }
 
-// Inicialización de las cards de experiencia
-function initExperienceCards() {
+// Función específica para las imágenes de las cards
+function initializeCardImages() {
     const cards = document.querySelectorAll('.experience-card');
     
-    cards.forEach(card => {
+    cards.forEach((card, index) => {
         const img = card.querySelector('img');
-        const loadingPlaceholder = document.createElement('div');
-        loadingPlaceholder.className = 'absolute inset-0 bg-gray-200 animate-pulse';
-        
+        if (!img) return;
+
+        const originalSrc = img.getAttribute('src');
+        console.log(`Inicializando imagen de card ${index + 1}:`, originalSrc);
+
+        // Crear contenedor de carga
+        const loadingContainer = document.createElement('div');
+        loadingContainer.className = 'absolute inset-0 bg-gray-200 animate-pulse';
+        img.parentNode.insertBefore(loadingContainer, img);
+
+        // Preparar rutas posibles
+        const tryPaths = [
+            originalSrc,
+            `/60/${originalSrc}`,
+            `/60/assets/${originalSrc.split('/').pop()}`,
+            `/assets/${originalSrc.split('/').pop()}`,
+            originalSrc.replace('assets/', '/60/assets/')
+        ];
+
+        // Función para probar cada ruta
+        const tryLoadImage = async () => {
+            for (let path of tryPaths) {
+                try {
+                    const response = await fetch(path);
+                    if (response.ok) {
+                        console.log('Imagen encontrada en:', path);
+                        img.src = path;
+                        return true;
+                    }
+                } catch (error) {
+                    console.log('Fallo al intentar ruta:', path);
+                }
+            }
+            return false;
+        };
+
+        // Configurar imagen
         img.style.opacity = '0';
-        img.parentNode.insertBefore(loadingPlaceholder, img);
-        
-        img.onload = () => {
-            loadingPlaceholder.remove();
-            img.style.opacity = '1';
-            img.style.transition = 'opacity 0.3s ease-in';
+        img.style.transition = 'opacity 0.3s ease-in';
+
+        img.onload = function() {
+            console.log('Imagen cargada:', this.src);
+            loadingContainer.remove();
+            this.style.opacity = '1';
         };
-        
-        img.onerror = () => {
-            loadingPlaceholder.remove();
+
+        img.onerror = function() {
+            console.error('Error al cargar:', this.src);
+            if (!this.src.includes('placeholder')) {
+                loadingContainer.remove();
+                this.src = '/api/placeholder/400/320';
+                this.style.opacity = '1';
+            }
+        };
+
+        // Intentar cargar la imagen
+        tryLoadImage().catch(error => {
+            console.error('Error en la carga:', error);
             img.src = '/api/placeholder/400/320';
-            img.style.opacity = '1';
-        };
+        });
     });
 }
 
@@ -139,23 +152,6 @@ function updateLanguage(lang) {
     });
 }
 
-// Observador de intersección para lazy loading
-const imageObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const img = entry.target;
-            if (img.dataset.src) {
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
-                observer.unobserve(img);
-            }
-        }
-    });
-}, {
-    rootMargin: '50px 0px',
-    threshold: 0.1
-});
-
 // Función para manejar el scroll del header
 function handleHeaderScroll() {
     const header = document.getElementById('mainHeader');
@@ -168,16 +164,33 @@ function handleHeaderScroll() {
     }
 }
 
+// Función de diagnóstico
+function diagnoseCardImages() {
+    console.log('=== DIAGNÓSTICO DE IMÁGENES EN CARDS ===');
+    const cards = document.querySelectorAll('.experience-card img');
+    
+    cards.forEach((img, index) => {
+        console.log(`Card ${index + 1}:`, {
+            src: img.getAttribute('src'),
+            currentSrc: img.currentSrc,
+            naturalWidth: img.naturalWidth,
+            naturalHeight: img.naturalHeight,
+            complete: img.complete,
+            offsetParent: img.offsetParent !== null,
+            visible: window.getComputedStyle(img).display !== 'none',
+            opacity: window.getComputedStyle(img).opacity
+        });
+    });
+}
+
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializar manejo de imágenes
-    handleImages().catch(console.error);
-    initExperienceCards();
-
-    // Aplicar lazy loading a imágenes con data-src
-    document.querySelectorAll('img[data-src]').forEach(img => {
-        imageObserver.observe(img);
-    });
+    // Inicializar imágenes
+    initializeImages();
+    initializeCardImages();
+    
+    // Diagnóstico después de un breve retraso
+    setTimeout(diagnoseCardImages, 1000);
 
     // Inicializar con español
     updateLanguage('es');
@@ -208,17 +221,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Event listener para el selector de idioma
-langSelect.addEventListener('change', (e) => {
-    updateLanguage(e.target.value);
-});
+const langSelect = document.getElementById('langSelect');
+if (langSelect) {
+    langSelect.addEventListener('change', (e) => {
+        updateLanguage(e.target.value);
+    });
+}
 
 // Event listener para el scroll
 window.addEventListener('scroll', handleHeaderScroll);
 
-// Ejecutar handleHeaderScroll una vez al cargar
-handleHeaderScroll();
-
-// Observer para las animaciones de sección
+// Observer para animaciones
 const observerOptions = {
     root: null,
     rootMargin: '0px',
@@ -238,3 +251,6 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('section').forEach(section => {
     observer.observe(section);
 });
+
+// Ejecutar handleHeaderScroll una vez al cargar
+handleHeaderScroll();
