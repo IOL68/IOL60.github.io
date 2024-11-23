@@ -1,41 +1,4 @@
-// Mobile menu functionality
-const menuButton = document.getElementById('menuButton');
-const mobileMenu = document.getElementById('mobileMenu');
-let isMenuOpen = false;
-
-menuButton.addEventListener('click', () => {
-    isMenuOpen = !isMenuOpen;
-    
-    if (isMenuOpen) {
-        mobileMenu.classList.remove('hidden');
-        setTimeout(() => {
-            mobileMenu.classList.add('show');
-            menuButton.innerHTML = '<i class="fas fa-times"></i>';
-        }, 10);
-    } else {
-        mobileMenu.classList.remove('show');
-        menuButton.innerHTML = '<i class="fas fa-bars"></i>';
-        setTimeout(() => {
-            mobileMenu.classList.add('hidden');
-        }, 300);
-    }
-});
-
-// Cerrar el menú al hacer click en enlaces
-document.querySelectorAll('#mobileMenu a').forEach(link => {
-    link.addEventListener('click', () => {
-        isMenuOpen = false;
-        mobileMenu.classList.remove('show');
-        menuButton.innerHTML = '<i class="fas fa-bars"></i>';
-        setTimeout(() => {
-            mobileMenu.classList.add('hidden');
-        }, 300);
-    });
-});
-
-// Language switcher
-const langSelect = document.getElementById('langSelect');
-const mobileLangSelect = document.getElementById('mobileLangSelect');
+// Continuación de las traducciones
 const translations = {
     es: {
         inicio: 'INICIO',
@@ -72,7 +35,6 @@ const translations = {
     }
 };
 
-// Función para actualizar el idioma
 function updateLanguage(lang) {
     const elements = document.querySelectorAll('[data-translate]');
     elements.forEach(element => {
@@ -83,18 +45,14 @@ function updateLanguage(lang) {
     });
 }
 
-// Sincronizar selectores de idioma
-if (langSelect && mobileLangSelect) {
-    langSelect.addEventListener('change', (e) => {
-        mobileLangSelect.value = e.target.value;
-        updateLanguage(e.target.value);
-    });
+// Language selector event listener
+langSelect.addEventListener('change', (e) => {
+    const lang = e.target.value;
+    updateLanguage(lang);
+});
 
-    mobileLangSelect.addEventListener('change', (e) => {
-        langSelect.value = e.target.value;
-        updateLanguage(e.target.value);
-    });
-}
+// Initialize with Spanish
+updateLanguage('es');
 
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -110,37 +68,46 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Header scroll functionality
-function handleHeaderScroll() {
-    const header = document.getElementById('mainHeader');
-    const scrollPosition = window.scrollY;
-
-    if (scrollPosition > 50) {
-        header.classList.add('header-scroll');
-    } else {
-        header.classList.remove('header-scroll');
-    }
+// Floating book button visibility
+const floatingButton = document.querySelector('.fixed.bottom-6.right-6');
+if (floatingButton) {
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 500) {
+            floatingButton.classList.remove('opacity-0');
+            floatingButton.classList.add('opacity-100');
+        } else {
+            floatingButton.classList.add('opacity-0');
+            floatingButton.classList.remove('opacity-100');
+        }
+    });
 }
 
-window.addEventListener('scroll', handleHeaderScroll);
-handleHeaderScroll();
+// Experience cards hover effect
+const cards = document.querySelectorAll('.experience-card');
+cards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-5px)';
+    });
+    
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0)';
+    });
+});
+
+// Initialize current year in footer
+document.querySelector('.text-gray-400 p').textContent = 
+    `© ${new Date().getFullYear()} Camino al Sol. Todos los derechos reservados.`;
 
 // Form validation for booking buttons
-document.querySelectorAll('button').forEach(button => {
-    if (button.textContent.includes('¡RESERVA YA!')) {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('¡Gracias por tu interés! Pronto te contactaremos para confirmar tu reserva.');
-        });
-    }
+document.querySelectorAll('button:contains("¡RESERVA YA!")').forEach(button => {
+    button.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Aquí puedes agregar la lógica para el proceso de reserva
+        alert('¡Gracias por tu interés! Pronto te contactaremos para confirmar tu reserva.');
+    });
 });
 
-// Initialize with Spanish
-document.addEventListener('DOMContentLoaded', () => {
-    updateLanguage('es');
-});
-
-// Animation observer
+// Add intersection observer for animations
 const observerOptions = {
     root: null,
     rootMargin: '0px',
@@ -156,7 +123,33 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe sections for animation
+// Observe all sections for animation
 document.querySelectorAll('section').forEach(section => {
     observer.observe(section);
+});
+
+// Add preload for images
+window.addEventListener('load', () => {
+    const images = document.querySelectorAll('img[data-src]');
+    images.forEach(img => {
+        img.src = img.dataset.src;
+        img.removeAttribute('data-src');
+    });
+});
+
+// Handle form submissions
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Aquí puedes agregar la validación del formulario
+        const formData = new FormData(form);
+        console.log('Form submitted:', Object.fromEntries(formData));
+    });
+});
+
+// Manejar errores de carga de imágenes
+document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('error', function() {
+        this.src = 'assets/placeholder.jpg'; // Imagen de respaldo
+    });
 });
